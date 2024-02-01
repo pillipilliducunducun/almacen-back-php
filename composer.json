@@ -1,0 +1,11 @@
+{
+    "require": {
+        "slim/slim": "^3.0",
+        "vlucas/phpdotenv": "^4.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Src\\": "src/"
+        }
+    }
+}

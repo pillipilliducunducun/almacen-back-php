@@ -1,0 +1,9 @@
+CREATE DATABASE IF NOT EXISTS almacen_db;
+USE almacen_db;
+
+CREATE TABLE IF NOT EXISTS products (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    codigo_barra VARCHAR(255) NOT NULL,
+    nombre VARCHAR(255) NOT NULL,
+    valor INT NOT NULL
+);
