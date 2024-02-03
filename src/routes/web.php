@@ -1,32 +1,93 @@
 <?php
-//web.php
+// web.php
+
 use Slim\Http\Request;
 use Slim\Http\Response;
-use Src\Controllers\ProductController;
 
-// Obtén el contenedor de Slim
-$container = $app->getContainer();
+$app->group('/products', function () {
 
-// Registra el controlador en el contenedor
-$container[ProductController::class] = function ($container) {
-    return new ProductController($container->get('db'));
-};
+    $this->get('', function (Request $request, Response $response) {
+        $db = $this->get('db');
+        $query = 'SELECT * FROM products';
+        try {
+            $stmt = $db->query($query);
+            $products = $stmt->fetchAll(PDO::FETCH_OBJ);
+            return $response->withJson($products);
+        } catch (\PDOException $e) {
+            return $response->withJson(['message' => $e->getMessage()], 500);
+        }
+    });
 
-// Definición de rutas para los productos
-$app->group('/products', function () use ($app) {
-    // Obtener todos los productos
-    $app->get('', ProductController::class . ':getAllProducts');
+    $this->get('/{id:[0-9]+}', function (Request $request, Response $response, $args) {
+        $db = $this->get('db');
+        $query = 'SELECT * FROM products WHERE id = :id';
+        try {
+            $stmt = $db->prepare($query);
+            $stmt->bindParam(':id', $args['id']);
+            $stmt->execute();
+            $product = $stmt->fetch(PDO::FETCH_OBJ);
+            if ($product) {
+                return $response->withJson($product);
+            } else {
+                return $response->withJson(['message' => 'Product not found'], 404);
+            }
+        } catch (\PDOException $e) {
+            return $response->withJson(['message' => $e->getMessage()], 500);
+        }
+    });
 
-    // Obtener un producto por ID
-    $app->get('/{id:[0-9]+}', ProductController::class . ':getProductById');
+    $this->post('', function (Request $request, Response $response) {
+        $db = $this->get('db');
+        $body = $request->getParsedBody();
+        $query = 'INSERT INTO products (codigo_barra, nombre, valor) VALUES (:codigo_barra, :nombre, :valor)';
+        try {
+            $stmt = $db->prepare($query);
+            $stmt->bindParam(':codigo_barra', $body['codigo_barra']);
+            $stmt->bindParam(':nombre', $body['nombre']);
+            $stmt->bindParam(':valor', $body['valor']);
+            $stmt->execute();
+            return $response->withJson(['message' => 'Inserción exitosa'], 201);
+        } catch (\PDOException $e) {
+            return $response->withJson(['message' => $e->getMessage()], 400);
+        }
+    });
 
-    // Crear un nuevo producto
-    $app->post('', ProductController::class . ':createProduct');
+    $this->put('/{id:[0-9]+}', function (Request $request, Response $response, $args) {
+        $db = $this->get('db');
+        $body = $request->getParsedBody();
+        $query = 'UPDATE products SET codigo_barra = :codigo_barra, nombre = :nombre, valor = :valor WHERE id = :id';
+        try {
+            $stmt = $db->prepare($query);
+            $stmt->bindParam(':codigo_barra', $body['codigo_barra']);
+            $stmt->bindParam(':nombre', $body['nombre']);
+            $stmt->bindParam(':valor', $body['valor']);
+            $stmt->bindParam(':id', $args['id']);
+            $stmt->execute();
+            if ($stmt->rowCount() > 0) {
+                return $response->withJson(['message' => 'Actualización exitosa']);
+            } else {
+                return $response->withJson(['message' => 'Product not found'], 404);
+            }
+        } catch (\PDOException $e) {
+            return $response->withJson(['message' => $e->getMessage()], 500);
+        }
+    });
 
-    // Actualizar un producto existente
-    $app->put('/{id:[0-9]+}', ProductController::class . ':updateProduct');
+    $this->delete('/{id:[0-9]+}', function (Request $request, Response $response, $args) {
+        $db = $this->get('db');
+        $query = 'DELETE FROM products WHERE id = :id';
+        try {
+            $stmt = $db->prepare($query);
+            $stmt->bindParam(':id', $args['id']);
+            $stmt->execute();
+            if ($stmt->rowCount() > 0) {
+                return $response->withJson(['message' => 'Eliminación exitosa'], 204);
+            } else {
+                return $response->withJson(['message' => 'Product not found'], 404);
+            }
+        } catch (\PDOException $e) {
+            return $response->withJson(['message' => $e->getMessage()], 500);
+        }
+    });
 
-    // Eliminar un productoS
-    $app->delete('/{id:[0-9]+}', ProductController::class . ':deleteProduct');
 });
-
