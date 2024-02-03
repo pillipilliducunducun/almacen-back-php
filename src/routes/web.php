@@ -26,7 +26,7 @@ $app->group('/products', function () use ($app) {
     // Actualizar un producto existente
     $app->put('/{id:[0-9]+}', ProductController::class . ':updateProduct');
 
-    // Eliminar un producto
+    // Eliminar un productoS
     $app->delete('/{id:[0-9]+}', ProductController::class . ':deleteProduct');
 });
 

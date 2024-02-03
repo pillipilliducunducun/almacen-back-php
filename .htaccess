@@ -1,0 +1,19 @@
+DirectoryIndex index.php
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteRule ^(.*)$ index.php [QSA,L]
+</IfModule>
+
+# Añadir encabezados CORS
+<IfModule mod_headers.c>
+    # Establecer CORS para permitir solicitudes desde cualquier dominio
+    Header set Access-Control-Allow-Origin "*"
+    # Permitir métodos específicos
+    Header set Access-Control-Allow-Methods "POST, GET, OPTIONS"
+    # Permitir encabezados específicos
+    Header set Access-Control-Allow-Headers "X-Requested-With, Content-Type, Origin, Authorization, Accept, Client-Security-Token, Accept-Encoding"
+    # Permitir credenciales (si es necesario)
+    #Header set Access-Control-Allow-Credentials "true"
+</IfModule>
