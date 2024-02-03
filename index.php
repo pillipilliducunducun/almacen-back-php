@@ -1,6 +1,6 @@
 <?php
-
-require __DIR__ . './vendor/autoload.php';
+//index.php
+require __DIR__ . '/vendor/autoload.php';
 
 // Configuración con detalles de error habilitados
 $configuration = [
@@ -17,7 +17,7 @@ $container = $app->getContainer();
 
 // Definición del servicio 'db'
 $container['db'] = function ($container) {
-    return (require __DIR__ . './src/config/db.php')();
+    return (require __DIR__ . '/src/config/db.php')();
 };
 
 // Definición del controlador
@@ -27,7 +27,7 @@ $container['ProductController'] = function ($container) {
 };
 
 // Registro de rutas
-require __DIR__ . './src/routes/web.php';
+require __DIR__ . '/src/routes/web.php';
 
 // Ejecución de la aplicación
 $app->run();

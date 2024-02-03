@@ -1,5 +1,5 @@
 <?php
-
+//web.php
 use Slim\Http\Request;
 use Slim\Http\Response;
 use Src\Controllers\ProductController;
