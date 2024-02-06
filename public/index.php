@@ -1,7 +1,7 @@
 <?php
 //index.php
 
-require __DIR__ . '/vendor/autoload.php';
+require __DIR__ . '/../vendor/autoload.php';
 
 $configuration = [
     'settings' => [
@@ -13,10 +13,10 @@ $app = new \Slim\App($configuration);
 $container = $app->getContainer();
 
 $container['db'] = function ($container) {
-    return (require __DIR__ . '/src/config/db.php')();
+    return (require __DIR__ . '/../src/config/db.php')();
 };
 
-require __DIR__ . '/src/routes/web.php';
+require __DIR__ . '/../src/routes/web.php';
 
 
 try {

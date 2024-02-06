@@ -1,3 +1,4 @@
+# .httacces
 DirectoryIndex index.php
 
 <IfModule mod_rewrite.c>

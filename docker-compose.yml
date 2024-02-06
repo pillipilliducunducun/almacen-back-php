@@ -1,0 +1,19 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "80:80"
+    volumes:
+      - .:/var/www/html
+    environment:
+      - APP_ENV=production
+    networks:
+      - my_network  # Agregamos el servicio a la misma red personalizada
+
+networks:
+  my_network:
+    external: true
