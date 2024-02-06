@@ -17,5 +17,5 @@ COPY . /var/www/html/
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 RUN composer install --no-dev --optimize-autoloader
 
-# Exponer el puerto 80
-EXPOSE 80
+# Exponer el puerto 8085
+EXPOSE 8085
